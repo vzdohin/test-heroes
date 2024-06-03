@@ -8,14 +8,28 @@ export default {
     CharacterCard,
     PaginationComponent
   },
+  props: {
+    page: {
+      type: Number,
+      default: 1
+    },
+    name: {
+      type: String,
+      default: ''
+    },
+    status: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       characters: [],
-      currentPage: 1,
+      currentPage: this.page,
       hasNextPage: true,
       filters: {
-        name: '',
-        status: ''
+        name: this.name,
+        status: this.status
       }
     };
   },
@@ -32,6 +46,7 @@ export default {
         });
         this.characters = response.data.results;
         this.hasNextPage = response.data.info.next !== null;
+        this.updateRoute();
       } catch (error) {
         if (error.response && error.response.status === 404) {
           this.hasNextPage = false;
@@ -42,16 +57,32 @@ export default {
     },
     applyFilters() {
       this.fetchCharacters(1); 
+    },
+    goHome() {
+      this.filters.name = '';
+      this.filters.status = '';
+      this.fetchCharacters(1);
+      this.$router.replace({ name: 'Home', query: { page: 1, name: '', status: '' } });
+    },
+    updateRoute() {
+      this.$router.replace({
+        name: 'Home',
+        query: {
+          page: this.currentPage,
+          name: this.filters.name,
+          status: this.filters.status
+        }
+      });
     }
   },
   mounted() {
-    this.fetchCharacters();
+    this.fetchCharacters(this.currentPage);
   }
 }
 </script>
 <template>
   <div>
-    <h1>Rick and Morty Characters</h1>
+    <h1 @click="goHome" class="clickable-header">Rick and Morty Characters</h1>
     <div>
       <input v-model="filters.name" placeholder="Name">
       <select v-model="filters.status">
@@ -68,15 +99,19 @@ export default {
     <PaginationComponent :currentPage="currentPage" @page-change="fetchCharacters" :hasNextPage="hasNextPage" />
   </div>
 </template>
-
-
-
 <style>
 .characters {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center
+  justify-content: center;
+}
 
+.clickable-header {
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
 
+.clickable-header:hover {
+  opacity: 0.7;
 }
 </style>

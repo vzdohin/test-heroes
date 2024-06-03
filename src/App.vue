@@ -1,20 +1,13 @@
-<template>
-  <div id="app">
-    <HomeView />
-  </div>
-</template>
-
 <script>
-import HomeView from './views/HomeView.vue';
-
 export default {
-  name: 'App',
-  components: {
-    HomeView
-  }
+  name: 'App'
 }
 </script>
-
+<template>
+  <div id="app">
+    <router-view />
+  </div>
+</template>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -23,6 +16,5 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-  /* margin: auto; */
 }
 </style>
