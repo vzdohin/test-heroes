@@ -107,6 +107,7 @@ export default {
 }
 
 .clickable-header {
+  display: inline-block;
   cursor: pointer;
   transition: opacity 0.3s ease;
 }
